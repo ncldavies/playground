@@ -73,20 +73,24 @@ class Shape {
 $started = microtime(1);
 
 #############
-# Initiate Shape Objects to test
+# Initiate Shape objects etc to test
 #############
 
+// mode 1: Find first match only
+// mode 2: Match all possible for all Shape objects
+$mode = 1;
+
 $shapes = [];
+// triangles etc, currently just throw an exception
+//$shapes[] = new Shape([[4,10],[5,10],[4,10]]);
 $shapes[] = new Shape([[0,0],[1,1]]); // 1x1 pixel 
-//$shapes[] = new Shape([[0,0],[0,1],[1,0],[1,1]]); // 1x1 pixel 
-//$shapes[] = new Shape([[4,10],[5,10],[4,10]]); // exception
 $shapes[] = new Shape([[2,1],[3,2]]);
 $shapes[] = new Shape([[0,0],[5,5]]);
 $shapes[] = new Shape([[2,2],[4,5]]);
 $shapes[] = new Shape([[2,1],[3,2]]);
 $shapes[] = new Shape([[0,0],[5,5]]);
-//$shapes[] = new Shape([[0,0],[0,1],[1,0],[1,1]]); // 1x1 pixel 
-
+$shapes[] = new Shape([[2,1],[3,2]]);
+$shapes[] = new Shape([[2,1],[3,2]]);
 $shapes[] = new Shape([[0,0],[5,5]]);
 
 #############
@@ -98,21 +102,15 @@ $found_match = false;
 for ($i = 0; $i < $num_shapes; $i++) {
   for ($j = $i + 1; $j < $num_shapes; $j++) {
     if ($shapes[$i]->occupies_same_space($shapes[$j])) {
-      $found_match = true;
-      
       echo sprintf("[FOUND_MATCH]\n"
             . "Shape Index %d:\t[%s]\n"
             . "Shape Index %d:\t[%s]\n",
           $i, implode(', ', $shapes[$i]->points),
           $j, implode(', ', $shapes[$j]->points));
-
-      // We have a match, so now have two options:
-      // 1) Continue and match all possible matches for all Shape objects
-      // 2) Break from both loops here if we only wanted the first match
-      //    by uncommenting the line below.
-      break 2;
+      $found_match = true;
+      if ($mode !== 2) break 2;
     }
-  }
+  } 
 }
 if (!$found_match) {
   echo "[NO_MATCH]\n";
